@@ -8,6 +8,7 @@ public class Painter : MonoBehaviour
 
     public GameObject _paintPrefab;
     public float _drawRate;
+    public float _overlapTreshold;
 
     private float _rate = 0f;
 
@@ -21,7 +22,11 @@ public class Painter : MonoBehaviour
             if (_rate > _drawRate)
             {
                 _rate = 0f;
-                Instantiate(_paintPrefab, Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 1), Quaternion.identity, transform);
+                var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 1);
+                //check for overlap
+                Collider[] colls = Physics.OverlapBox(pos, new Vector3(_overlapTreshold / 10, _overlapTreshold / 10, _overlapTreshold / 10));
+                if (colls.Length == 0)
+                    Instantiate(_paintPrefab, pos, Quaternion.identity, transform);
             }
         }
     }
